@@ -24,20 +24,20 @@
   .secondary{background:#ededed;color:#111}
   textarea{width:100%;min-height:104px;resize:vertical;margin-top:12px;border:1px solid #ddd;border-radius:8px;padding:10px;font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#fafafa;color:#333}
   .preview-wrap{display:flex;min-height:190px;align-items:center;justify-content:center;background:linear-gradient(45deg,#f7f7f7 25%,transparent 25%),linear-gradient(-45deg,#f7f7f7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#f7f7f7 75%),linear-gradient(-45deg,transparent 75%,#f7f7f7 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0;border-radius:10px;overflow:hidden}
-  #preview{border:0;width:272px;height:98px;background:transparent}
+  #preview{border:0;width:272px;height:104px;background:transparent}
   .note{font-size:11px;color:#898989;line-height:1.6;margin-top:12px}
   @media(max-width:760px){body{padding:16px}.generator{grid-template-columns:1fr}}
 
   /* player mode */
   html.player-mode,body.player-mode{margin:0;padding:0;width:100%;height:100%;background:transparent!important;overflow:hidden;color:var(--fg,#111)}
   .player-shell{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:transparent!important}
-  .player{--fg:#111;--muted:color-mix(in srgb,var(--fg) 58%,transparent);--track:color-mix(in srgb,var(--fg) 18%,transparent);--hover:color-mix(in srgb,var(--fg) 7%,transparent);--active:color-mix(in srgb,var(--fg) 12%,transparent);--playfg:#fff;width:min(100%,264px);height:94px;background:transparent!important;padding:2px 4px;color:var(--fg);user-select:none}
+  .player{--fg:#111;--muted:color-mix(in srgb,var(--fg) 58%,transparent);--track:color-mix(in srgb,var(--fg) 20%,transparent);--hover:color-mix(in srgb,var(--fg) 7%,transparent);width:min(100%,264px);height:100px;background:transparent!important;padding:1px 4px;color:var(--fg);user-select:none}
   .track-head{min-width:0;padding:0 0 1px}
   .title{display:block;width:max-content;max-width:100%;font-size:11px;line-height:13px;font-weight:700;letter-spacing:-.015em;color:var(--fg);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .title:hover{text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
   .artist{font-size:9px;line-height:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .visualizer{width:100%;height:24px;display:block;margin-top:1px}
-  .progress-row{display:grid;grid-template-columns:26px 1fr 26px;gap:5px;align-items:center;margin-top:0}
+  .visualizer{width:100%;height:30px;display:block;margin-top:2px}
+  .progress-row{display:grid;grid-template-columns:24px 1fr 24px;gap:4px;align-items:center;margin-top:-1px}
   .time{font-size:7.5px;line-height:9px;color:var(--muted);font-variant-numeric:tabular-nums}
   .time.total{text-align:right}
   .progress{appearance:none;width:100%;height:8px;background:transparent;margin:0;cursor:pointer}
@@ -46,16 +46,20 @@
   .progress::-moz-range-progress{height:1.5px;border-radius:99px;background:var(--fg)}
   .progress::-webkit-slider-thumb{appearance:none;width:6px;height:6px;border-radius:50%;background:var(--fg);margin-top:-2.25px}
   .progress::-moz-range-thumb{width:6px;height:6px;border:0;border-radius:50%;background:var(--fg)}
-  .controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:2px;min-height:27px}
+  .controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:1px;min-height:24px}
   .left,.right{display:flex;align-items:center;gap:4px}
   .right{justify-content:flex-end}
-  .icon-btn{width:21px;height:21px;border:0;background:transparent;color:var(--fg);padding:0;display:grid;place-items:center;cursor:pointer;border-radius:3px}
-  .icon-btn:hover{background:var(--hover)}
-  .icon-btn.active{background:var(--active)}
-  .icon-btn svg{width:11px;height:11px;display:block}
-  .play{width:28px;height:26px;border:0;border-radius:4px;background:var(--fg);color:var(--playfg);display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:none}
-  .play:hover{opacity:.88}
-  .play svg{width:12px;height:12px}
+  .icon-btn{width:20px;height:20px;border:0;background:transparent;color:var(--fg);padding:0;display:grid;place-items:center;cursor:pointer;border-radius:0}
+  .icon-btn:hover{opacity:.58}
+  .icon-btn.active{opacity:.45}
+  .icon-btn svg{width:10px;height:10px;display:block}
+  .center-controls{display:flex;align-items:center;justify-content:center;gap:9px}
+  .transport{width:18px;height:20px;border:0;background:transparent;color:var(--fg);padding:0;display:grid;place-items:center;cursor:pointer}
+  .transport:hover{opacity:.58}
+  .transport svg{width:9px;height:9px;display:block}
+  .play{width:20px;height:20px;border:0;border-radius:0;background:transparent;color:var(--fg);display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:none}
+  .play:hover{opacity:.58}
+  .play svg{width:10px;height:10px}
   .volume-wrap{display:flex;align-items:center;width:70px;overflow:visible}
   .volume{appearance:none;width:43px;height:8px;background:transparent;margin-left:2px;cursor:pointer;opacity:1}
   .volume::-webkit-slider-runnable-track{height:1.5px;background:var(--track);border-radius:99px}
@@ -119,9 +123,17 @@
             <input class="volume" id="volume" type="range" min="0" max="1" step="0.01" value="0.72" aria-label="볼륨">
           </div>
         </div>
-        <button class="play" id="play" aria-label="재생">
-          <span id="playIcon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-        </button>
+        <div class="center-controls">
+          <button class="transport" id="prev" aria-label="10초 뒤로" title="10초 뒤로">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM18 5 9 12l9 7z"/></svg>
+          </button>
+          <button class="play" id="play" aria-label="재생">
+            <span id="playIcon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          </button>
+          <button class="transport" id="next" aria-label="10초 앞으로" title="10초 앞으로">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM6 5l9 7-9 7z"/></svg>
+          </button>
+        </div>
         <div class="right">
           <button class="icon-btn" id="repeat" aria-label="반복 재생" title="반복 재생">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
@@ -187,7 +199,7 @@
     function refresh() {
       const src = playerUrl();
       $('preview').src = src;
-      $('embed').value = `<iframe src="${src.replace(/&/g,'&amp;')}" width="272" height="98" style="border:0;background:transparent;overflow:hidden;" scrolling="no" loading="lazy" allow="autoplay" title="BGM player"></iframe>`;
+      $('embed').value = `<iframe src="${src.replace(/&/g,'&amp;')}" width="272" height="104" style="border:0;background:transparent;overflow:hidden;" scrolling="no" loading="lazy" allow="autoplay" title="BGM player"></iframe>`;
     }
 
     $('apply').addEventListener('click', refresh);
@@ -221,6 +233,8 @@
   const volume = $('volume');
   const mute = $('mute');
   const repeat = $('repeat');
+  const prev = $('prev');
+  const next = $('next');
   const canvas = $('viz');
   const ctx = canvas.getContext('2d');
 
@@ -326,6 +340,14 @@
     audio.loop = !audio.loop;
     repeat.classList.toggle('active', audio.loop);
   });
+  prev.addEventListener('click', () => {
+    if (!Number.isFinite(audio.duration)) return;
+    audio.currentTime = Math.max(0, audio.currentTime - 10);
+  });
+  next.addEventListener('click', () => {
+    if (!Number.isFinite(audio.duration)) return;
+    audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+  });
 
   function resizeCanvas() {
     const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
@@ -337,11 +359,15 @@
   new ResizeObserver(resizeCanvas).observe(canvas);
   resizeCanvas();
 
-  const idle = Array.from({length:45}, (_,i) => 0.16 + 0.28*Math.abs(Math.sin((i+3)*1.17)));
+  const idle = Array.from({length:86}, (_,i) => {
+    const a = Math.sin(i*.31)*.16 + Math.sin(i*.83+1.7)*.10;
+    const env = .36 + .22*Math.sin((i/85)*Math.PI*3.4 + .5);
+    return Math.max(.10, Math.min(.76, env+a));
+  });
   function draw() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     ctx.clearRect(0,0,w,h);
-    const bars = 45;
+    const bars = 86;
     const step = w / bars;
     let live = false;
     if (connected && analyser && !audio.paused) {
@@ -350,26 +376,29 @@
     }
     const fg = getComputedStyle(playerEl).getPropertyValue('--fg').trim() || '#111';
     ctx.strokeStyle = fg;
-    ctx.lineWidth = 1;
-    ctx.lineCap = 'round';
+    ctx.globalAlpha = .78;
+    ctx.lineWidth = .65;
+    ctx.lineCap = 'butt';
+    const mid = h/2;
     for (let i=0;i<bars;i++) {
       let level;
       if (live) {
-        const idx = Math.floor(i / bars * Math.min(data.length, 46));
-        level = Math.pow((data[idx] || 0)/255, .78);
-        level = Math.max(.06, level);
+        const idx = Math.floor((i / bars) * Math.min(data.length, 52));
+        const v = (data[idx] || 0)/255;
+        const shaped = Math.pow(v, .72);
+        const envelope = .72 + .20*Math.sin(i*.18) + .08*Math.sin(i*.61+1.1);
+        level = Math.max(.08, Math.min(1, shaped*envelope));
       } else {
         level = idle[i];
       }
-      const bh = 2 + level*(h-4);
+      const bh = 3 + level*(h-5);
       const x = (i+.5)*step;
-      const y1 = (h-bh)/2;
-      const y2 = y1+bh;
       ctx.beginPath();
-      ctx.moveTo(x,y1);
-      ctx.lineTo(x,y2);
+      ctx.moveTo(x, mid-bh/2);
+      ctx.lineTo(x, mid+bh/2);
       ctx.stroke();
     }
+    ctx.globalAlpha = 1;
     requestAnimationFrame(draw);
   }
   draw();
