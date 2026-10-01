@@ -26,7 +26,8 @@
   .primary{background:#111;color:#fff}
   .secondary{background:#ededed;color:#111}
   textarea{width:100%;min-height:104px;resize:vertical;margin-top:12px;border:1px solid #ddd;border-radius:8px;padding:10px;font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#fafafa;color:#333}
-  .preview-wrap{display:flex;min-height:190px;align-items:center;justify-content:center;background:linear-gradient(45deg,#f7f7f7 25%,transparent 25%),linear-gradient(-45deg,#f7f7f7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#f7f7f7 75%),linear-gradient(-45deg,transparent 75%,#f7f7f7 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0;border-radius:10px;overflow:hidden}
+  .preview-wrap{display:flex;min-height:190px;align-items:center;justify-content:center;background-color:#fff;background-image:linear-gradient(45deg,#f3f3f3 25%,transparent 25%),linear-gradient(-45deg,#f3f3f3 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#f3f3f3 75%),linear-gradient(-45deg,transparent 75%,#f3f3f3 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0;border-radius:10px;overflow:hidden}
+  @media(prefers-color-scheme:dark){.preview-wrap{background-color:#171717;background-image:linear-gradient(45deg,#202020 25%,transparent 25%),linear-gradient(-45deg,#202020 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#202020 75%),linear-gradient(-45deg,transparent 75%,#202020 75%)}}
   #preview{border:0;width:272px;height:104px;background:transparent}
   .note{font-size:11px;color:#898989;line-height:1.6;margin-top:12px}
   @media(max-width:760px){body{padding:16px}.generator{grid-template-columns:1fr}}
@@ -196,6 +197,8 @@
       refresh();
     });
     $('showWave').addEventListener('change', refresh);
+    const schemeMQ = matchMedia('(prefers-color-scheme: dark)');
+    schemeMQ.addEventListener?.('change', () => { if ($('autoColor').checked) refresh(); });
 
     function playerUrl() {
       const u = new URL(location.href);
@@ -214,7 +217,9 @@
 
     function refresh() {
       const src = playerUrl();
-      $('preview').src = src;
+      const previewUrl = new URL(src);
+      previewUrl.searchParams.set('_preview', String(Date.now()));
+      $('preview').src = previewUrl.toString();
       $('embed').value = `<style>.tistory-bgm-wrap,.tistory-bgm-wrap *{box-shadow:none!important}.tistory-bgm-wrap{width:100%!important;display:flex!important;justify-content:center!important;align-items:center!important;border:0!important;outline:0!important;background:transparent!important}.tistory-bgm-frame{display:block!important;margin:0 auto!important;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important}</style><div class="tistory-bgm-wrap" style="width:100%!important;display:flex!important;justify-content:center!important;align-items:center!important;border:0!important;outline:0!important;background:transparent!important;"><iframe class="tistory-bgm-frame" src="${src.replace(/&/g,'&amp;')}" width="272" height="104" frameborder="0" scrolling="no" loading="lazy" allow="autoplay" title="BGM player" style="display:block!important;margin:0 auto!important;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;overflow:hidden!important;"></iframe></div>`;
     }
 
@@ -286,10 +291,38 @@
     $('songTitle').style.textDecoration = 'none';
   }
 
-  // CORS-enabled direct links allow true live analyser data.
-  if (showWave) audio.crossOrigin = 'anonymous';
-  audio.src = src;
-  audio.volume = Number(volume.value);
+  // Never force CORS on the audio element before we know the host supports it.
+  // For hosts without CORS, playback still works and the visualizer falls back to a
+  // lightweight animated waveform instead of breaking the audio.
+  let corsAnalyserAllowed = false;
+  let audioReadyResolve;
+  const audioReady = new Promise(r => audioReadyResolve = r);
+
+  async function initAudioSource(){
+    if (!src) { audioReadyResolve(); return; }
+    if (!showWave) {
+      audio.src = src;
+      audio.volume = Number(volume.value);
+      audioReadyResolve();
+      return;
+    }
+    try {
+      const u = new URL(src, location.href);
+      if (u.origin === location.origin) {
+        corsAnalyserAllowed = true;
+      } else {
+        const res = await fetch(src, {method:'HEAD', mode:'cors', cache:'no-store'});
+        corsAnalyserAllowed = res.ok;
+      }
+    } catch (_) {
+      corsAnalyserAllowed = false;
+    }
+    if (corsAnalyserAllowed) audio.crossOrigin = 'anonymous';
+    audio.src = src;
+    audio.volume = Number(volume.value);
+    audioReadyResolve();
+  }
+  initAudioSource();
 
   function fmt(sec) {
     if (!Number.isFinite(sec)) return '0:00';
@@ -305,7 +338,7 @@
 
   let ac, analyser, sourceNode, data, connected = false;
   function setupAudioGraph() {
-    if (!showWave || connected) return;
+    if (!showWave || !corsAnalyserAllowed || connected) return;
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
     ac = new AC();
@@ -325,6 +358,7 @@
 
   playBtn.addEventListener('click', async () => {
     if (!src) return;
+    await audioReady;
     setupAudioGraph();
     if (ac && ac.state === 'suspended') await ac.resume();
     if (audio.paused) {
@@ -410,7 +444,10 @@
         const envelope = .72 + .20*Math.sin(i*.18) + .08*Math.sin(i*.61+1.1);
         level = Math.max(.08, Math.min(1, shaped*envelope));
       } else {
-        level = idle[i];
+        const t = audio.paused ? 0 : audio.currentTime;
+        const pulse = audio.paused ? 1 : (0.80 + 0.20*Math.sin(t*5.2 + i*.22));
+        const drift = audio.paused ? 0 : (0.06*Math.sin(t*3.1 + i*.47));
+        level = Math.max(.08, Math.min(1, idle[i]*pulse + drift));
       }
       const bh = 3 + level*(h-5);
       const x = (i+.5)*step;
