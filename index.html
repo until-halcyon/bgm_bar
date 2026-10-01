@@ -40,8 +40,9 @@
   .title:hover{text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
   .artist{font-size:9px;line-height:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .visualizer{width:100%;height:30px;display:block;margin-top:2px}
+  .player.no-viz{padding-top:18px}
   .player.no-viz .visualizer{display:none}
-  .player.no-viz .track-head{padding-top:17px;padding-bottom:5px}
+  .player.no-viz .track-head{padding-top:0;padding-bottom:4px}
   .player.no-viz .progress-row{margin-top:0}
   .progress-row{display:grid;grid-template-columns:24px 1fr 24px;gap:4px;align-items:center;margin-top:-1px}
   .time{font-size:7.5px;line-height:9px;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -252,7 +253,6 @@
   const next = $('next');
   const canvas = $('viz');
   const ctx = canvas.getContext('2d');
-  if (!showWave) canvas.hidden = true;
 
   const src = qs.get('src') || '';
   const title = qs.get('title') || 'Song Name';
@@ -261,6 +261,7 @@
   const requestedColor = qs.get('color') || '#111111';
   const autoColor = qs.get('auto') === '1';
   const showWave = qs.get('wave') !== '0';
+  if (!showWave) canvas.hidden = true;
   const playerEl = document.querySelector('.player');
   if (!showWave) playerEl.classList.add('no-viz');
   const validColor = /^#[0-9a-fA-F]{6}$/.test(requestedColor) ? requestedColor : '#111111';
